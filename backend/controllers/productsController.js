@@ -25,9 +25,9 @@ export const getProducts = catchAsyncErrors(async (req, res) => {
 
 // Add new products /api/v1/admin/products
 export const addProduct = catchAsyncErrors(async (req, res) => {
-  req.body.user = req?.user?._id
+  req.body.user = req.user._id
 
-  const product = await Product.create(req?.body)
+  const product = await Product.create(req.body)
 
   res.status(200).json({
     product
@@ -36,7 +36,7 @@ export const addProduct = catchAsyncErrors(async (req, res) => {
 
 // Get details of a single product /api/v1/products/:id
 export const getProductDetails = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findById(req?.params?.id).exec()
+  const product = await Product.findById(req.params.id).exec()
 
   if (product) {
     res.status(200).json({
@@ -49,7 +49,7 @@ export const getProductDetails = catchAsyncErrors(async (req, res, next) => {
 
 // Update details of a single product /api/v1/products/:id
 export const updateProductDetails = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findByIdAndUpdate(req?.params?.id, req?.body, { new: true })
+  const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true })
 
   if (product) {
     res.status(200).json({
@@ -62,7 +62,7 @@ export const updateProductDetails = catchAsyncErrors(async (req, res, next) => {
 
 // Delete a single product /api/v1/products/:id
 export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findById({ _id: req?.params?.id })
+  const product = await Product.findById({ _id: req.params.id })
 
   if (product) {
     await product.deleteOne()

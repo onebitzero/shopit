@@ -32,9 +32,9 @@ export const loginUser = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler('Email doesn\'t exist.', 401))
   }
 
-  const isPasswordValidated = await user.validatePassword(password)
+  const isPasswordValid = await user.validatePassword(password)
 
-  if (!isPasswordValidated) {
+  if (!isPasswordValid) {
     return next(new ErrorHandler('Invalid password.', 401))
   }
 
@@ -67,7 +67,7 @@ export const forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
   const resetUrl = `${process.env.FRONTEND_URL}/api/v1/password/reset/${resetPasswordToken}`
 
-  const message = getResetPasswordEmailTemplate(user?.name, resetUrl)
+  const message = getResetPasswordEmailTemplate(user.name, resetUrl)
 
   try {
     await sendEmail({
@@ -85,7 +85,7 @@ export const forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
     await user.save()
 
-    return next(new ErrorHandler(err?.message, 500))
+    return next(new ErrorHandler(err.message, 500))
   }
 })
 
@@ -114,4 +114,95 @@ export const resetPassword = catchAsyncErrors(async (req, res, next) => {
   await user.save()
 
   sendToken(user, 200, res)
+})
+
+// Get user profile
+export const getUserProfile = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.user._id).exec()
+
+  res.status(200).json({
+    user
+  })
+})
+
+// Update password
+export const updatePassword = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.user._id).select('+password').exec()
+
+  const isPasswordValid = await user.validatePassword(req.body.oldPassword)
+
+  if (!isPasswordValid) {
+    return next(new ErrorHandler('Incorrect old password.', 400))
+  }
+
+  user.password = req.body.password
+  await user.save()
+
+  res.status(200).json({
+    success: true
+  })
+})
+
+// Update user profile
+export const updateUserProfile = catchAsyncErrors(async (req, res, next) => {
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email
+  }
+
+  const user = await User.findByIdAndUpdate(req.user._id, newUserData, { new: true })
+
+  res.status(200).json({
+    user
+  })
+})
+
+// Get details of all users
+export const getUsers = catchAsyncErrors(async (req, res, next) => {
+  const users = await User.find()
+
+  res.status(200).json({
+    users
+  })
+})
+
+// Get details of a single user
+export const getUserDetails = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.params.id).exec()
+
+  if (!user) {
+    return next(new ErrorHandler('User doesn\'t exist.', 404))
+  }
+
+  res.status(200).json({
+    user
+  })
+})
+
+// Update user
+export const updateUser = catchAsyncErrors(async (req, res, next) => {
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+    role: req.body.role
+  }
+
+  const user = await User.findByIdAndUpdate(req.params.id, newUserData, { new: true })
+
+  res.status(200).json({
+    user
+  })
+})
+
+// Delete user
+export const deleteUser = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findByIdAndDelete(req.params.id)
+
+  if (!user) {
+    return next(new ErrorHandler('User doesn\'t exist.', 404))
+  }
+
+  res.status(200).json({
+    success: true
+  })
 })
