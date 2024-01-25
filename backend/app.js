@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 // import Routers
 import productRouter from './routes/products.js'
 import authRouter from './routes/auth.js'
+import orderRouter from './routes/order.js'
 
 import errorMiddleware from './middleware/errorMiddleware.js'
 
@@ -25,6 +26,7 @@ connectToDatabase()
 
 app.use('/api/v1', productRouter)
 app.use('/api/v1', authRouter)
+app.use('/api/v1', orderRouter)
 
 app.use(errorMiddleware)
 

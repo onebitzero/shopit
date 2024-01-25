@@ -1,6 +1,7 @@
 import express from 'express'
 import { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUserProfile, updatePassword, updateUserProfile, getUsers, getUserDetails, updateUser, deleteUser } from '../controllers/authController.js'
 import { isUserAuthenticated, authorizeRoles } from '../middleware/auth.js'
+
 const router = express.Router()
 
 router.route('/register').post(registerUser)
