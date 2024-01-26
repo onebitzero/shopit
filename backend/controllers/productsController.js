@@ -38,38 +38,107 @@ export const addProduct = catchAsyncErrors(async (req, res) => {
 export const getProductDetails = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id).exec()
 
-  if (product) {
-    res.status(200).json({
-      product
-    })
-  } else {
+  if (!product) {
     next(new ErrorHandler('Couldn\'t find the product.', 404))
   }
+
+  res.status(200).json({
+    product
+  })
 })
 
 // Update details of a single product /api/v1/products/:id
 export const updateProductDetails = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true })
 
-  if (product) {
-    res.status(200).json({
-      product
-    })
-  } else {
+  if (!product) {
     next(new ErrorHandler('Couldn\'t find the product.', 404))
   }
+
+  res.status(200).json({
+    product
+  })
 })
 
 // Delete a single product /api/v1/products/:id
 export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findById({ _id: req.params.id })
+  const product = await Product.findById(req.params.id).exec()
 
-  if (product) {
-    await product.deleteOne()
-    res.status(200).json({
-      product
-    })
-  } else {
+  if (!product) {
     next(new ErrorHandler('Couldn\'t find the product.', 404))
   }
+
+  await product.deleteOne()
+
+  res.status(200).json({
+    product
+  })
+})
+
+// Create or Update user review /api/v1/reviews
+export const createReview = catchAsyncErrors(async (req, res, next) => {
+  const { rating, comment, productId } = req.body
+
+  const review = {
+    user: req.user.id,
+    rating: Number(rating),
+    comment
+  }
+
+  const product = await Product.findById(productId).exec()
+
+  if (!product) {
+    next(new ErrorHandler('Couldn\'t find the product.', 404))
+  }
+
+  const isReviewed = product.reviews.find(review => review.user.toString() === req.user._id.toString())
+
+  if (isReviewed) {
+    isReviewed.rating = rating
+    isReviewed.comment = comment
+  } else {
+    product.reviews.push(review)
+    product.numOfReviews = product.reviews.length
+  }
+
+  product.ratings = product.reviews.reduce((accumulator, review) => review.rating + accumulator, 0) / product.numOfReviews
+
+  await product.save({ validateBeforeSave: false })
+
+  res.status(200).json({
+    success: true
+  })
+})
+
+// Get all reviews of a product api/v1/reviews
+export const getReviews = catchAsyncErrors(async (req, res, next) => {
+  const product = await Product.findById(req.query.productId).exec()
+
+  if (!product) {
+    return next(new ErrorHandler('Couldn\'t find the product.', 404))
+  }
+
+  res.status(200).json({
+    reviews: product.reviews
+  })
+})
+
+// ADMIN Delete a review of a product api/v1/admin/reviews
+export const deleteReview = catchAsyncErrors(async (req, res, next) => {
+  const product = await Product.findById(req.query.productId).exec()
+
+  if (!product) {
+    return next(new ErrorHandler('Couldn\'t find the product.', 404))
+  }
+
+  product.reviews = product.reviews.filter(review => review._id.toString() !== req.query.id.toString())
+
+  product.numOfReviews = product.reviews.length
+  product.ratings = product.numOfReviews && product.reviews.reduce((accumulator, review) => review.rating + accumulator, 0) / product.numOfReviews
+
+  await product.save({ validateBeforeSave: false })
+
+  res.status(200).json({
+    success: true
+  })
 })

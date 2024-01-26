@@ -22,7 +22,7 @@ const data = [
     category: 'Electronics',
     seller: 'Ebay',
     stock: 50,
-    numOfReviews: 32,
+    numOfReviews: 0,
     reviews: []
   },
   {
@@ -52,7 +52,7 @@ const data = [
     category: 'Electronics',
     seller: 'Amazon',
     stock: 0,
-    numOfReviews: 2,
+    numOfReviews: 0,
     reviews: []
   },
   {
@@ -74,7 +74,7 @@ const data = [
     category: 'Electronics',
     seller: 'Amazon',
     stock: 1,
-    numOfReviews: 12,
+    numOfReviews: 0,
     reviews: []
   },
   {
@@ -96,7 +96,7 @@ const data = [
     category: 'Headphone',
     seller: 'Amazon',
     stock: 11,
-    numOfReviews: 112,
+    numOfReviews: 0,
     reviews: []
   },
   {
@@ -122,7 +122,7 @@ const data = [
     category: 'Electronics',
     seller: 'Amazon',
     stock: 122,
-    numOfReviews: 2671,
+    numOfReviews: 0,
     reviews: []
   },
   {
@@ -140,7 +140,7 @@ const data = [
     category: 'Accessories',
     seller: 'Amazon',
     stock: 1123,
-    numOfReviews: 6,
+    numOfReviews: 0,
     reviews: []
   },
   {
@@ -166,7 +166,7 @@ const data = [
     category: 'Camera',
     seller: 'Amazon',
     stock: 131,
-    numOfReviews: 222,
+    numOfReviews: 0,
     reviews: []
   },
   {
@@ -192,7 +192,7 @@ const data = [
     category: 'Laptop',
     seller: 'Amazon',
     stock: 0,
-    numOfReviews: 56,
+    numOfReviews: 0,
     reviews: []
   },
   {
@@ -214,7 +214,7 @@ const data = [
     category: 'Food',
     seller: "Kauffman's Fruit Farm & Market",
     stock: 500,
-    numOfReviews: 1,
+    numOfReviews: 0,
     reviews: []
   }
 ]

@@ -1,6 +1,9 @@
+import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import Product from '../models/product.js'
 import products from './data.js'
+
+dotenv.config({ path: 'backend/config/config.env' })
 
 async function seedProducts () {
   try {
