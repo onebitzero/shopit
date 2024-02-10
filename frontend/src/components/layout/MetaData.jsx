@@ -1,15 +1,15 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Helmet } from 'react-helmet'
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import PropTypes from 'prop-types';
 
-export default function MetaData ({ title }) {
+export default function MetaData({ title }) {
   return (
     <Helmet>
       <title>{`${title} - ShopIt`}</title>
     </Helmet>
-  )
+  );
 }
 
 MetaData.propTypes = {
-  title: PropTypes.string.isRequired
-}
+  title: PropTypes.string.isRequired,
+};
