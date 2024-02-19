@@ -5,10 +5,10 @@
   "description": "E-Commerce App",
   "main": "index.js",
   "scripts": {
-    "start": "node backend/app.js",
-    "dev": "SET NODE_ENV=DEVELOPMENT& nodemon backend/app.js",
-    "prod": "SET NODE_ENV=PRODUCTION& node backend/app.js",
-    "seeder": "node backend/seeder/seeder.js"
+    "start": "node app.js",
+    "dev": "SET NODE_ENV=DEVELOPMENT& nodemon app.js",
+    "prod": "SET NODE_ENV=PRODUCTION& node app.js",
+    "seeder": "node seeder/seeder.js"
   },
   "keywords": [],
   "author": "",
@@ -29,7 +29,6 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "nodemon": "^3.0.2",
-    "standard": "^17.1.0"
+    "nodemon": "^3.0.2"
   }
 }

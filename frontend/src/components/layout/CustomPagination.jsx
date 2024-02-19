@@ -39,7 +39,7 @@ export default function CustomPagination({ resultsPerPage, productsCount }) {
         prevPageText="Prev"
         firstPageText="First"
         lastPageText="Last"
-        nextPageText="next"
+        nextPageText="Next"
         itemClass="page-item"
         linkClass="page-link"
       />

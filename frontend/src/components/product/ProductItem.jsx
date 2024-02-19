@@ -6,10 +6,10 @@ import PropTypes from 'prop-types';
 export default function ProductItem({
   product: {
     _id: id, name, price, ratings, images, numOfReviews,
-  },
+  }, columnSize,
 }) {
   return (
-    <div className="col-sm-12 col-md-6 col-lg-3 my-3">
+    <div className={`col-sm-12 col-md-6 col-lg-${columnSize} my-3`}>
       <div className="card p-3 rounded">
         <img
           className="card-img-top mx-auto"
@@ -47,4 +47,5 @@ export default function ProductItem({
 
 ProductItem.propTypes = {
   product: PropTypes.object.isRequired,
+  columnSize: PropTypes.number.isRequired,
 };

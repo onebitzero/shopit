@@ -1,5 +1,5 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-export default async function connectToDatabase () {
-  await mongoose.connect(process.env.MONGODB_URI).catch(err => console.log(err))
+export default async function connectToDatabase() {
+  await mongoose.connect(process.env.MONGODB_URI).catch((err) => console.log(err));
 }
