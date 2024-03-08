@@ -8,6 +8,11 @@ import Home from './components/Home';
 import ProductDetails from './components/product/ProductDetails';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import Profile from './components/user/Profile';
+import UpdateProfile from './components/user/UpdateProfile';
+import UploadAvatar from './components/user/UploadAvatar';
+import UpdatePassword from './components/user/UpdatePassword';
 
 const router = createBrowserRouter([
   {
@@ -15,20 +20,52 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: '/',
+        path: '',
         element: <Home />,
       },
       {
-        path: '/products/:id',
+        path: 'products/:id',
         element: <ProductDetails />,
       },
       {
-        path: '/login',
+        path: 'login',
         element: <Login />,
       },
       {
-        path: '/register',
+        path: 'register',
         element: <Register />,
+      },
+      {
+        path: 'me/profile',
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'me/update_profile',
+        element: (
+          <ProtectedRoute>
+            <UpdateProfile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'me/upload_avatar',
+        element: (
+          <ProtectedRoute>
+            <UploadAvatar />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'me/update_password',
+        element: (
+          <ProtectedRoute>
+            <UpdatePassword />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

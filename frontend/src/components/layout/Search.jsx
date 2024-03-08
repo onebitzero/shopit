@@ -8,7 +8,7 @@ export default function Search() {
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (keyword?.trim()) {
+    if (keyword.trim()) {
       navigate(`/?keyword=${keyword}`);
     } else {
       navigate('/');

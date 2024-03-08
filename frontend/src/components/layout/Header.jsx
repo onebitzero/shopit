@@ -1,22 +1,19 @@
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { useGetMeQuery } from '../../redux/api/userApi';
+import { Link } from 'react-router-dom';
+import { useGetUserQuery } from '../../redux/api/userApi';
 import { useLazyLogoutQuery } from '../../redux/api/authApi';
 import Search from './Search';
 
 export default function Header() {
-  const { isLoading } = useGetMeQuery();
+  const { isLoading } = useGetUserQuery();
   const [logout] = useLazyLogoutQuery();
 
   const { user } = useSelector((state) => state.auth);
 
-  const navigate = useNavigate();
-
   const handleLogout = useCallback(() => {
     logout();
-    navigate(0);
-  });
+  }, [logout]);
 
   return (
     <nav className="navbar row">
@@ -63,10 +60,10 @@ export default function Header() {
             </button>
 
             <div className="dropdown-menu w-100" aria-labelledby="dropDownMenuButton">
-              <Link className="dropdown-item" to="/admin/dashboard"> Dashboard </Link>
-              <Link className="dropdown-item" to="/me/orders"> Orders </Link>
-              <Link className="dropdown-item" to="/me/profile"> Profile </Link>
-              <Link className="dropdown-item text-danger" to="/" onClick={handleLogout}> Logout </Link>
+              <Link className="dropdown-item" to="/admin/dashboard">Dashboard</Link>
+              <Link className="dropdown-item" to="/me/orders">Orders</Link>
+              <Link className="dropdown-item" to="/me/profile">Profile</Link>
+              <a href="/" className="dropdown-item text-danger" onClick={handleLogout}>Logout</a>
             </div>
 
           </div>

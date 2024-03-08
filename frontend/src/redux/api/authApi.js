@@ -14,7 +14,7 @@ export const authApi = createApi({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
-          await dispatch(userApi.endpoints.getMe.initiate());
+          await dispatch(userApi.endpoints.getUser.initiate());
         } catch (error) {
           console.error(error);
         }
@@ -29,7 +29,7 @@ export const authApi = createApi({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
-          await dispatch(userApi.endpoints.getMe.initiate());
+          await dispatch(userApi.endpoints.getUser.initiate());
         } catch (error) {
           console.error(error);
         }

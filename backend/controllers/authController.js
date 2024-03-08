@@ -5,6 +5,7 @@ import sendToken from '../utils/sendToken.js';
 import ErrorHandler from '../utils/ErrorHandler.js';
 import { getResetPasswordEmailTemplate } from '../utils/emailTemplates.js';
 import sendEmail from '../utils/sendEmail.js';
+import { uploadFile, deleteFile } from '../utils/cloudinary.js';
 
 export const registerUser = catchAsyncErrors(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -50,6 +51,23 @@ export const logoutUser = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     message: 'Logged out.',
+  });
+});
+
+// Upload user avatar /api/v1/me/upload_avatar
+export const uploadAvatar = catchAsyncErrors(async (req, res, next) => {
+  const { public_id: publicId, url } = await uploadFile(req.body.avatar, 'shopIT/avatars');
+
+  if (req.user.avatar) {
+    await deleteFile(req.user.avatar.public_id);
+  }
+
+  const user = await User.findByIdAndUpdate(req.user._id, {
+    avatar: { public_id: publicId, url },
+  });
+
+  res.status(200).json({
+    user,
   });
 });
 
@@ -135,7 +153,7 @@ export const updatePassword = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler('Incorrect old password.', 400));
   }
 
-  user.password = req.body.password;
+  user.password = req.body.newPassword;
   await user.save();
 
   res.status(200).json({
