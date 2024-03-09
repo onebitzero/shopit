@@ -90,7 +90,7 @@ export default function Register() {
           </div>
 
           <button id="register_button" type="submit" className="btn w-100 py-2" disabled={isLoading}>
-            {isLoading ? 'Please wait' : 'Register'}
+            {isLoading ? 'Please wait...' : 'Register'}
           </button>
         </form>
       </div>

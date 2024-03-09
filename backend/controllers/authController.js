@@ -58,8 +58,8 @@ export const logoutUser = catchAsyncErrors(async (req, res, next) => {
 export const uploadAvatar = catchAsyncErrors(async (req, res, next) => {
   const { public_id: publicId, url } = await uploadFile(req.body.avatar, 'shopIT/avatars');
 
-  if (req.user.avatar) {
-    await deleteFile(req.user.avatar.public_id);
+  if (req.user.avatar.url) {
+    const response = await deleteFile(req.user.avatar.public_id);
   }
 
   const user = await User.findByIdAndUpdate(req.user._id, {
@@ -83,7 +83,7 @@ export const forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
   await user.save();
 
-  const resetUrl = `${process.env.FRONTEND_URL}/api/v1/password/reset/${resetPasswordToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/password/reset/${resetPasswordToken}`;
 
   const message = getResetPasswordEmailTemplate(user.name, resetUrl);
 

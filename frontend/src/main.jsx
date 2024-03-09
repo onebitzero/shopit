@@ -13,6 +13,8 @@ import Profile from './components/user/Profile';
 import UpdateProfile from './components/user/UpdateProfile';
 import UploadAvatar from './components/user/UploadAvatar';
 import UpdatePassword from './components/user/UpdatePassword';
+import ForgotPassword from './components/auth/ForgotPassword';
+import ResetPassword from './components/auth/ResetPassword';
 
 const router = createBrowserRouter([
   {
@@ -66,6 +68,14 @@ const router = createBrowserRouter([
             <UpdatePassword />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: 'password/forgot',
+        element: <ForgotPassword />,
+      },
+      {
+        path: 'password/reset/:token',
+        element: <ResetPassword />,
       },
     ],
   },

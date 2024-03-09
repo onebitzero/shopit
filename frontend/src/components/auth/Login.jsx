@@ -69,7 +69,7 @@ export default function Login() {
           <a href="/password/forgot" className="float-end mb-4">Forgot Password?</a>
 
           <button id="login_button" type="submit" className="btn w-100 py-2" disabled={isLoading}>
-            {isLoading ? 'Please Wait' : 'Login'}
+            {isLoading ? 'Please Wait...' : 'Login'}
           </button>
 
           <div className="my-3">
