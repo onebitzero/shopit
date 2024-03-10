@@ -15,6 +15,7 @@ import UploadAvatar from './components/user/UploadAvatar';
 import UpdatePassword from './components/user/UpdatePassword';
 import ForgotPassword from './components/auth/ForgotPassword';
 import ResetPassword from './components/auth/ResetPassword';
+import Cart from './components/cart/Cart';
 
 const router = createBrowserRouter([
   {
@@ -76,6 +77,10 @@ const router = createBrowserRouter([
       {
         path: 'password/reset/:token',
         element: <ResetPassword />,
+      },
+      {
+        path: 'cart',
+        element: <Cart />,
       },
     ],
   },
