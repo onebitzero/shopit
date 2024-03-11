@@ -16,6 +16,9 @@ import UpdatePassword from './components/user/UpdatePassword';
 import ForgotPassword from './components/auth/ForgotPassword';
 import ResetPassword from './components/auth/ResetPassword';
 import Cart from './components/cart/Cart';
+import Shipping from './components/cart/Shipping';
+import ConfirmOrder from './components/cart/ConfirmOrder';
+import PaymentMethod from './components/cart/PaymentMethod';
 
 const router = createBrowserRouter([
   {
@@ -81,6 +84,30 @@ const router = createBrowserRouter([
       {
         path: 'cart',
         element: <Cart />,
+      },
+      {
+        path: 'shipping',
+        element: (
+          <ProtectedRoute>
+            <Shipping />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'confirm_order',
+        element: (
+          <ProtectedRoute>
+            <ConfirmOrder />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'payment_method',
+        element: (
+          <ProtectedRoute>
+            <PaymentMethod />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

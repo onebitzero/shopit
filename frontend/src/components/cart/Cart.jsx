@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { setCartItem, removeCartItem } from '../../redux/features/cartSlice';
 import MetaData from '../layout/MetaData';
@@ -17,6 +17,8 @@ export default function Cart() {
   );
 
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   function addToCart(item, newQuantity) {
     const cartItem = {
@@ -123,6 +125,7 @@ export default function Cart() {
                   type="button"
                   id="checkout_btn"
                   className="btn btn-primary w-100"
+                  onClick={() => navigate('/shipping')}
                 >
                   Check out
                 </button>
