@@ -5,7 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import MetaData from '../layout/MetaData';
 import CheckoutSteps from './CheckoutSteps';
 import calculateOrderSummary from '../../helpers/calculateOrderSummary';
-import { useCreateNewOrderMutation } from '../../redux/api/orderApi';
+import {
+  useCreateNewOrderMutation,
+  useStripeCheckoutSessionMutation,
+} from '../../redux/api/orderApi';
 
 export default function PaymentMethod() {
   const [paymentMethod, setPaymentMethod] = useState('Pay on delivery');
@@ -14,12 +17,16 @@ export default function PaymentMethod() {
   const { cart, shippingInfo } = useSelector((state) => state.cart);
 
   const [createNewOrder, { isLoading, isSuccess, error }] = useCreateNewOrderMutation();
+  const [
+    stripeCheckoutSession,
+    { isLoading: checkoutIsLoading, data: checkoutData, error: checkoutError },
+  ] = useStripeCheckoutSessionMutation();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (error) {
-      toast.error(error.data.message);
+      toast.error(checkoutError.data.message);
     }
 
     if (isSuccess) {
@@ -27,6 +34,16 @@ export default function PaymentMethod() {
       navigate('/');
     }
   }, [error, isSuccess]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.data.message);
+    }
+
+    if (checkoutData) {
+      window.location.href = checkoutData.url;
+    }
+  }, [error, checkoutData]);
 
   function handlePaymentMethod(event) {
     event.preventDefault();
@@ -49,6 +66,19 @@ export default function PaymentMethod() {
 
       createNewOrder(orderData);
     }
+
+    if (paymentMethod === 'Online') {
+      const orderData = {
+        shippingDetails: shippingInfo,
+        user,
+        orderItems: cart,
+        itemsPrice: total.orderTotal,
+        taxAmount: total.tax,
+        totalAmount: total.grossTotal,
+      };
+
+      stripeCheckoutSession(orderData);
+    }
   }
   return (
     <>
@@ -70,7 +100,7 @@ export default function PaymentMethod() {
                   type="radio"
                   name="payment_mode"
                   id="codradio"
-                  value="POD"
+                  value="Pay on delivery"
                   onClick={() => setPaymentMethod('Pay on delivery')}
                 />
                 Pay on Delivery
@@ -90,8 +120,8 @@ export default function PaymentMethod() {
                 Card - VISA, MasterCard
               </label>
             </div>
-            <button id="shipping_btn" type="submit" className="btn py-2 w-100">
-              CONTINUE
+            <button id="shipping_btn" type="submit" className="btn py-2 w-100" disabled={isLoading || checkoutIsLoading}>
+              {isLoading || checkoutIsLoading ? 'Please wait...' : 'Continue'}
             </button>
           </form>
         </div>

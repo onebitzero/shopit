@@ -131,7 +131,7 @@ export default function ProductDetails() {
           type="button"
           id="cart_btn"
           className="btn btn-primary d-inline ms-4"
-          disabled={product.stock === 0}
+          disabled={quantity === 0}
           onClick={handleAddToCart}
         >
           Add to Cart

@@ -7,6 +7,7 @@ import connectToDatabase from './config/connectToDatabase.js';
 import productRouter from './routes/products.js';
 import authRouter from './routes/auth.js';
 import orderRouter from './routes/order.js';
+import paymentRouter from './routes/payment.js';
 
 import errorMiddleware from './middleware/errorMiddleware.js';
 
@@ -19,7 +20,14 @@ process.on('uncaughtException', (err, origin) => {
 dotenv.config({ path: 'config/config.env' });
 
 const app = express();
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json(
+  {
+    limit: '10mb',
+    verify: (req, res, buf) => {
+      req.rawBody = buf.toString();
+    },
+  },
+));
 app.use(cookieParser());
 
 connectToDatabase();
@@ -27,6 +35,7 @@ connectToDatabase();
 app.use('/api/v1', productRouter);
 app.use('/api/v1', authRouter);
 app.use('/api/v1', orderRouter);
+app.use('/api/v1', paymentRouter);
 
 app.use(errorMiddleware);
 

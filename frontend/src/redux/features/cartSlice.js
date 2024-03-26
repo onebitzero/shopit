@@ -20,35 +20,32 @@ const cartSlice = createSlice({
         (element) => element.productId === item.productId,
       );
 
-      let newCart;
-
       if (itemExists) {
-        newCart = state.cart.map(
+        state.cart = state.cart.map(
           (element) => (element.productId === itemExists.productId ? item : element),
         );
       } else {
-        newCart = [...state.cart, item];
+        state.cart = [...state.cart, item];
       }
 
-      localStorage.setItem('cart', JSON.stringify(newCart));
-
-      return { cart: newCart, ...state };
+      // Update local storage
+      localStorage.setItem('cart', JSON.stringify(state.cart));
     },
     removeCartItem(state, action) {
       const item = action.payload;
 
-      const newCart = state.cart.filter(
+      state.cart = state.cart.filter(
         (element) => element.productId !== item.productId,
       );
 
-      localStorage.setItem('cart', JSON.stringify(newCart));
-
-      return { cart: newCart, ...state };
+      // Update local storage
+      localStorage.setItem('cart', JSON.stringify(state.cart));
     },
     setShippingInfo(state, action) {
-      localStorage.setItem('shippingInfo', JSON.stringify(action.payload));
+      state.shippingInfo = action.payload;
 
-      return { ...state, shippingInfo: action.payload };
+      // Update local storage
+      localStorage.setItem('shippingInfo', JSON.stringify(action.payload));
     },
   },
 });

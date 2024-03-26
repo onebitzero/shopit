@@ -11,16 +11,13 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setIsLoading(state, action) {
-      const currentState = state;
-      currentState.isLoading = action.payload;
+      state.isLoading = action.payload;
     },
     setIsAuthenticated(state, action) {
-      const currentState = state;
-      currentState.isAuthenticated = action.payload;
+      state.isAuthenticated = action.payload;
     },
     setUser(state, action) {
-      const currentState = state;
-      currentState.user = action.payload;
+      state.user = action.payload;
     },
   },
 });

@@ -30,7 +30,9 @@ export default function Cart() {
   }
 
   function handleDecreaseQuantity(item, quantity) {
-    if (quantity > 0) {
+    if (quantity === 1) {
+      dispatch(removeCartItem(item));
+    } else {
       addToCart(item, quantity - 1);
     }
   }
