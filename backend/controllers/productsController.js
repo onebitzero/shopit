@@ -1,6 +1,7 @@
 import catchAsyncErrors from '../middleware/catchAsyncErrors.js';
 import ApiFilters from '../utils/ApiFilters.js';
 import Product from '../models/product.js';
+import Order from '../models/order.js';
 import ErrorHandler from '../utils/ErrorHandler.js';
 
 // Get details of all products /api/v1/products
@@ -75,6 +76,21 @@ export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+// Can the user review the product api/v1/can_review
+export const canReview = catchAsyncErrors(async (req, res, next) => {
+  const orders = await Order.find({ user: req.user._id, 'orderItems.productId': req.query.productId }).exec();
+
+  if (orders.length === 0) {
+    return res.status(200).json({
+      canReview: false,
+    });
+  }
+
+  res.status(200).json({
+    canReview: true,
+  });
+});
+
 // Create or Update user review /api/v1/reviews
 export const createReview = catchAsyncErrors(async (req, res, next) => {
   const { rating, comment, productId } = req.body;
@@ -115,7 +131,7 @@ export const createReview = catchAsyncErrors(async (req, res, next) => {
 
 // Get all reviews of a product api/v1/reviews
 export const getReviews = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findById(req.query.productId).exec();
+  const product = await Product.findById(req.query.productId).populate('reviews.user').exec();
 
   if (!product) {
     return next(new ErrorHandler('Couldn\'t find the product.', 404));

@@ -1,20 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import StarRatings from 'react-star-ratings';
-import { useGetProductDetailsQuery } from '../../redux/api/productsApi';
+import { useGetProductDetailsQuery, useGetCanReviewQuery } from '../../redux/api/productsApi';
 import { setCartItem } from '../../redux/features/cartSlice';
 import Loader from '../layout/Loader';
+import NewReview from '../review/NewReview';
+import ReviewList from '../review/ReviewList';
 
 export default function ProductDetails() {
-  const { id: productId } = useParams();
+  const { id: paramsProductId } = useParams();
 
   const {
     data, error, isLoading, isError,
-  } = useGetProductDetailsQuery(productId);
+  } = useGetProductDetailsQuery(paramsProductId);
 
-  const product = data?.product;
+  const {
+    _id: productId,
+    name,
+    images,
+    price,
+    stock,
+    ratings,
+    description,
+    seller,
+    numOfReviews,
+  } = isLoading ? {} : data.product;
+
+  const {
+    isLoading: canReviewIsLoading,
+    isSuccess: canReviewIsSuccess,
+    data: canReviewData,
+  } = useGetCanReviewQuery(paramsProductId);
+
+  const { canReview } = canReviewIsLoading ? {} : canReviewIsSuccess ? canReviewData : {};
+
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const [activeImageUrl, setActiveImageUrl] = useState('');
 
@@ -27,8 +49,10 @@ export default function ProductDetails() {
       toast.error(error.data.message);
     }
 
-    setActiveImageUrl(product?.images[0].url);
-  }, [isError, error, product]);
+    if (images) {
+      setActiveImageUrl(images[0].url);
+    }
+  }, [isError, error, images]);
 
   function handleDecreaseQuantity() {
     if (quantity > 0) {
@@ -37,7 +61,7 @@ export default function ProductDetails() {
   }
 
   function handleIncreaseQuantity() {
-    if (quantity < product?.stock) {
+    if (quantity < stock) {
       setQuantity(quantity + 1);
     } else {
       toast.error('You have reached stock limit.');
@@ -46,18 +70,18 @@ export default function ProductDetails() {
 
   function handleAddToCart() {
     const cartItem = {
-      productId: product._id,
-      name: product.name,
-      price: product.price,
-      image: product.images[0].url,
-      stock: product.stock,
+      productId,
+      name,
+      price,
+      image: images[0].url,
+      stock,
       quantity,
     };
 
     dispatch(setCartItem(cartItem));
   }
 
-  return isLoading ? (
+  return (isLoading || canReviewIsLoading) ? (
     <Loader />
   ) : (
     <div className="row d-flex justify-content-around">
@@ -66,13 +90,14 @@ export default function ProductDetails() {
           <img
             className="d-block w-100"
             src={activeImageUrl}
-            alt={product.name}
+            alt={name}
             width="340"
             height="390"
           />
         </div>
+
         <div className="row justify-content-start mt-5">
-          {product.images.map((image) => (
+          {images.map((image) => (
             <div key={image.public_id} className="col-2 ms-4 mt-2">
               <a role="button">
                 <img
@@ -90,43 +115,64 @@ export default function ProductDetails() {
           ))}
         </div>
       </div>
+
       <div className="col-12 col-lg-5 mt-5">
-        <h3>{product.name}</h3>
+        <h3>{name}</h3>
+
         <p id="product_id">
           Product #
           {productId}
         </p>
+
         <hr />
+
         <div className="d-flex">
           <StarRatings
-            rating={product.ratings}
+            rating={ratings}
             starRatedColor="ffb829"
             numberOfStars={5}
             starDimension="25px"
             starSpacing="1px"
             name="rating"
           />
+
           <span id="no-of-reviews" className="pt-1 ps-2">
             (
-            {product.numOfReviews}
+            {numOfReviews}
             )
           </span>
         </div>
+
         <hr />
+
         <p id="product_price">
           $
-          {product.price}
+          {price}
         </p>
+
         <div className="stockCounter d-inline">
-          <span className="btn btn-danger minus" onClick={handleDecreaseQuantity}> - </span>
+          <span
+            className="btn btn-danger minus"
+            onClick={handleDecreaseQuantity}
+          >
+            -
+          </span>
+
           <input
             type="number"
             className="form-control count d-inline"
             value={quantity}
             readOnly
           />
-          <span className="btn btn-primary plus" onClick={handleIncreaseQuantity}> + </span>
+
+          <span
+            className="btn btn-primary plus"
+            onClick={handleIncreaseQuantity}
+          >
+            +
+          </span>
         </div>
+
         <button
           type="button"
           id="cart_btn"
@@ -136,29 +182,43 @@ export default function ProductDetails() {
         >
           Add to Cart
         </button>
+
         <hr />
+
         <p>
           Status:
-          <span
-            id="stock_status"
-            className={product.stock ? 'greenColor' : 'redColor'}
-          >
-            {product.stock ? 'In Stock' : 'Out of Stock'}
+          <span id="stock_status" className={stock ? 'greenColor' : 'redColor'}>
+            {stock ? 'In Stock' : 'Out of Stock'}
           </span>
         </p>
+
         <hr />
+
         <h4 className="mt-2">Description:</h4>
-        <p>{product.description}</p>
+
+        <p>{description}</p>
+
         <hr />
+
         <p id="product_seller mb-3">
           Sold by:
-          {' '}
-          <strong>{product.seller}</strong>
+          <strong>{` ${seller}`}</strong>
         </p>
-        <div className="alert alert-danger my-5" type="alert">
-          Login to post your review.
-        </div>
+
+        {isAuthenticated ? canReview ? (
+          <NewReview />
+        ) : (
+          <div className="alert alert-danger my-5" type="alert">
+            Buy the product to post your review.
+          </div>
+        ) : (
+          <div className="alert alert-danger my-5" type="alert">
+            Login to post your review.
+          </div>
+        )}
       </div>
+
+      {numOfReviews && <ReviewList />}
     </div>
   );
 }

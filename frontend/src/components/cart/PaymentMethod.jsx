@@ -19,21 +19,26 @@ export default function PaymentMethod() {
   const [createNewOrder, { isLoading, isSuccess, error }] = useCreateNewOrderMutation();
   const [
     stripeCheckoutSession,
-    { isLoading: checkoutIsLoading, data: checkoutData, error: checkoutError },
+    {
+      isLoading: checkoutIsLoading,
+      isError: checkoutIsError,
+      data: checkoutData,
+      error: checkoutError,
+    },
   ] = useStripeCheckoutSessionMutation();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (error) {
+    if (checkoutIsError) {
       toast.error(checkoutError.data.message);
     }
 
     if (isSuccess) {
-      toast.success('Order placed.');
-      navigate('/');
+      toast.success('Order placed');
+      navigate('/me/orders/?success=true');
     }
-  }, [error, isSuccess]);
+  }, [checkoutIsError, isSuccess, error]);
 
   useEffect(() => {
     if (error) {
@@ -120,7 +125,12 @@ export default function PaymentMethod() {
                 Card - VISA, MasterCard
               </label>
             </div>
-            <button id="shipping_btn" type="submit" className="btn py-2 w-100" disabled={isLoading || checkoutIsLoading}>
+            <button
+              id="shipping_btn"
+              type="submit"
+              className="btn py-2 w-100"
+              disabled={isLoading || checkoutIsLoading}
+            >
               {isLoading || checkoutIsLoading ? 'Please wait...' : 'Continue'}
             </button>
           </form>
