@@ -26,7 +26,7 @@ export default function Header() {
       <div className="col-12 col-md-3 ps-5">
         <div className="navbar-brand">
           <a href="/">
-            <img src="../images/shopit_logo.png" alt="ShopIT Logo" />
+            <img src="../../../images/shopit_logo.png" alt="ShopIT Logo" />
           </a>
         </div>
       </div>
@@ -59,7 +59,7 @@ export default function Header() {
                   src={
                     user.avatar
                       ? user.avatar.url
-                      : '../images/default_avatar.jpg'
+                      : '../../../images/default_avatar.jpg'
                   }
                   alt="User Avatar"
                   className="rounded-circle"
@@ -72,9 +72,11 @@ export default function Header() {
               className="dropdown-menu w-100"
               aria-labelledby="dropDownMenuButton"
             >
+              {user.role === 'admin' && (
               <Link className="dropdown-item" to="/admin/dashboard">
                 Dashboard
               </Link>
+              )}
               <Link className="dropdown-item" to="/me/orders">
                 Orders
               </Link>

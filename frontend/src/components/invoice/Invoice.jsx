@@ -84,12 +84,12 @@ export default function Invoice() {
               <div>ShopIT</div>
 
               <div>
-                455 Foggy Heights,
+                221B Baker Street,
                 <br />
-                AZ 85004, US
+                London, UK
               </div>
 
-              <div>(602) 519-0450</div>
+              <div>(+44 ) 1632 960456</div>
 
               <div>
                 <a href="mailto:info@shopit.com">info@shopit.com</a>

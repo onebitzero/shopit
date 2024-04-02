@@ -492,6 +492,13 @@ footer {
   font-size: 1.5rem;
 }
 
+.orders {
+  background-color: rgb(17, 45, 78);
+}
+
+.sales {
+  background-color: rgb(63, 114, 175);
+}
 /* Reviews */
 
 .rating {

@@ -13,20 +13,23 @@ export default function ProductDetails() {
   const { id: paramsProductId } = useParams();
 
   const {
-    data, error, isLoading, isError,
+    data: {
+      product: {
+        _id: productId,
+        name,
+        images,
+        price,
+        stock,
+        ratings,
+        description,
+        seller,
+        numOfReviews,
+      } = {},
+    } = {},
+    error,
+    isLoading,
+    isError,
   } = useGetProductDetailsQuery(paramsProductId);
-
-  const {
-    _id: productId,
-    name,
-    images,
-    price,
-    stock,
-    ratings,
-    description,
-    seller,
-    numOfReviews,
-  } = isLoading ? {} : data.product;
 
   const {
     isLoading: canReviewIsLoading,
@@ -50,7 +53,11 @@ export default function ProductDetails() {
     }
 
     if (images) {
-      setActiveImageUrl(images[0].url);
+      if (images.length) {
+        setActiveImageUrl(images[0].url);
+      } else {
+        setActiveImageUrl('../../../images/default_product.png');
+      }
     }
   }, [isError, error, images]);
 
@@ -73,7 +80,7 @@ export default function ProductDetails() {
       productId,
       name,
       price,
-      image: images[0].url,
+      image: images.length ? images[0].url : '../../../images/default_product.png',
       stock,
       quantity,
     };
@@ -97,22 +104,36 @@ export default function ProductDetails() {
         </div>
 
         <div className="row justify-content-start mt-5">
-          {images.map((image) => (
-            <div key={image.public_id} className="col-2 ms-4 mt-2">
+          {images.length ? (
+            images.map((image) => (
+              <div key={image.public_id} className="col-2 ms-4 mt-2">
+                <a role="button">
+                  <img
+                    className={`d-block border rounded p-3 cursor-pointer ${
+                      image.url === activeImageUrl ? 'border-warning' : ''
+                    }`}
+                    height="100"
+                    width="100"
+                    src={image.url}
+                    alt={image.url}
+                    onClick={() => setActiveImageUrl(image.url)}
+                  />
+                </a>
+              </div>
+            ))
+          ) : (
+            <div className="col-2 ms-4 mt-2">
               <a role="button">
                 <img
-                  className={`d-block border rounded p-3 cursor-pointer ${
-                    image.url === activeImageUrl ? 'border-warning' : ''
-                  }`}
+                  className="d-block border rounded p-3 cursor-pointer border-warning"
                   height="100"
                   width="100"
-                  src={image.url}
-                  alt={image.url}
-                  onClick={() => setActiveImageUrl(image.url)}
+                  src="../../../images/default_product.png"
+                  alt="default"
                 />
               </a>
             </div>
-          ))}
+          )}
         </div>
       </div>
 
@@ -146,8 +167,7 @@ export default function ProductDetails() {
         <hr />
 
         <p id="product_price">
-          $
-          {price}
+          {`$ ${price}`}
         </p>
 
         <div className="stockCounter d-inline">
@@ -218,7 +238,7 @@ export default function ProductDetails() {
         )}
       </div>
 
-      {numOfReviews && <ReviewList />}
+      {numOfReviews > 0 && <ReviewList />}
     </div>
   );
 }

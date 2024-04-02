@@ -32,7 +32,9 @@ router.route('/me/upload_avatar').put(isUserAuthenticated, uploadAvatar);
 router.route('/password/update').put(isUserAuthenticated, updatePassword);
 
 router.route('/admin/users').get(isUserAuthenticated, authorizeRoles('admin'), getUsers);
-router.route('/admin/users/:id')
+
+router
+  .route('/admin/user')
   .get(isUserAuthenticated, authorizeRoles('admin'), getUserDetails)
   .put(isUserAuthenticated, authorizeRoles('admin'), updateUser)
   .delete(isUserAuthenticated, authorizeRoles('admin'), deleteUser);

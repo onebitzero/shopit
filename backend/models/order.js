@@ -57,7 +57,7 @@ const orderSchema = new mongoose.Schema(
       required: [true, 'Please choose a payment method'],
       enum: {
         values: ['Pay on delivery', 'Online'],
-        message: 'Please choose from one of these payment methods: COD or Card.',
+        message: 'Please choose from one of these payment methods: Pay on delivery or Online.',
       },
     },
     paymentInfo: {

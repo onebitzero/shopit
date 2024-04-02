@@ -2,6 +2,11 @@ import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     name: {
       type: String,
       required: [true, 'Please enter the name of the product.'],
@@ -15,22 +20,20 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please enter description for the product.'],
     },
-    ratings: {
-      type: Number,
-      default: 0,
+    images: {
+      type: [
+        {
+          public_id: {
+            type: String,
+            required: true,
+          },
+          url: {
+            type: String,
+            required: true,
+          },
+        },
+      ],
     },
-    images: [
-      {
-        public_id: {
-          type: String,
-          required: true,
-        },
-        url: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
     category: {
       type: String,
       required: [true, 'Please assign a category to the product.'],
@@ -38,6 +41,11 @@ const productSchema = new mongoose.Schema(
         values: ['Electronics', 'Camera', 'Laptop', 'Accessories', 'Headphone', 'Food', 'Book', 'Sports', 'Outdoor', 'Home'],
         message: 'Please assign a correct category to the product.',
       },
+    },
+    stock: {
+      type: Number,
+      default: 0,
+      required: [true, 'Please enter quantity of the product in stock.'],
     },
     seller: {
       type: String,
@@ -64,10 +72,9 @@ const productSchema = new mongoose.Schema(
         },
       },
     ],
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
+    ratings: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true },

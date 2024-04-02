@@ -59,7 +59,7 @@ export const uploadAvatar = catchAsyncErrors(async (req, res, next) => {
   const { public_id: publicId, url } = await uploadFile(req.body.avatar, 'shopIT/avatars');
 
   if (req.user.avatar.url) {
-    const response = await deleteFile(req.user.avatar.public_id);
+    await deleteFile(req.user.avatar.public_id);
   }
 
   const user = await User.findByIdAndUpdate(req.user._id, {
@@ -175,8 +175,8 @@ export const updateUserProfile = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-// Get details of all users
-export const getUsers = catchAsyncErrors(async (req, res, next) => {
+// Admin Get details of all users /admin/users
+export const getUsers = catchAsyncErrors(async (req, res) => {
   const users = await User.find();
 
   res.status(200).json({
@@ -184,9 +184,9 @@ export const getUsers = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-// Get details of a single user
+// Get details of a single user /admin/user
 export const getUserDetails = catchAsyncErrors(async (req, res, next) => {
-  const user = await User.findById(req.params.id).exec();
+  const user = await User.findById(req.query.userId).exec();
 
   if (!user) {
     return next(new ErrorHandler('User doesn\'t exist.', 404));
@@ -197,7 +197,7 @@ export const getUserDetails = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-// Update user
+// Admin Update user /admin/user
 export const updateUser = catchAsyncErrors(async (req, res, next) => {
   const newUserData = {
     name: req.body.name,
@@ -205,22 +205,32 @@ export const updateUser = catchAsyncErrors(async (req, res, next) => {
     role: req.body.role,
   };
 
-  const user = await User.findByIdAndUpdate(req.params.id, newUserData, { new: true });
+  const user = await User.findByIdAndUpdate(req.body.userId, newUserData);
 
   res.status(200).json({
     user,
   });
 });
 
-// Delete user
+// Admin Delete user /admin/user
 export const deleteUser = catchAsyncErrors(async (req, res, next) => {
-  const user = await User.findByIdAndDelete(req.params.id);
+  const user = await User.findById(req.body.userId).exec();
 
   if (!user) {
     return next(new ErrorHandler('User doesn\'t exist.', 404));
   }
 
+  if (user.role === 'admin') {
+    return next(new ErrorHandler('Can\'t delete Admin', 400));
+  }
+
+  if (user.avatar.public_id) {
+    await deleteFile(user.avatar.public_id);
+  }
+
+  await User.findByIdAndDelete(req.body.userId);
+
   res.status(200).json({
-    success: true,
+    response: 'User deleted',
   });
 });

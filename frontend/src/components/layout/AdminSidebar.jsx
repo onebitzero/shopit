@@ -1,27 +1,37 @@
 import React, { useCallback, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-export default function Sidebar() {
+export default function AdminSidebar() {
   const menuItems = [
     {
-      name: 'Profile',
-      url: '/me/profile',
-      icon: 'fa-solid fa-user',
+      name: 'Dashboard',
+      url: '/admin/dashboard',
+      icon: 'fa-solid fa-chart-simple',
     },
     {
-      name: 'Update Profile',
-      url: '/me/update_profile',
-      icon: 'fa-solid fa-user-pen',
+      name: 'Add New Product',
+      url: '/admin/product/new',
+      icon: 'fas fa-plus',
     },
     {
-      name: 'Upload Avatar',
-      url: '/me/upload_avatar',
-      icon: 'fa-solid fa-circle-user',
+      name: 'Products',
+      url: '/admin/products',
+      icon: 'fa-solid fa-list',
     },
     {
-      name: 'Update Password',
-      url: '/me/update_password',
-      icon: 'fa-solid fa-lock',
+      name: 'Orders',
+      url: '/admin/orders',
+      icon: 'fas fa-file-invoice',
+    },
+    {
+      name: 'Users',
+      url: '/admin/users',
+      icon: 'fas fa-user',
+    },
+    {
+      name: 'Reviews',
+      url: '/admin/reviews',
+      icon: 'fas fa-star',
     },
   ];
 

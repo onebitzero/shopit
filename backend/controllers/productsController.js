@@ -3,6 +3,7 @@ import ApiFilters from '../utils/ApiFilters.js';
 import Product from '../models/product.js';
 import Order from '../models/order.js';
 import ErrorHandler from '../utils/ErrorHandler.js';
+import { uploadFile, deleteFile } from '../utils/cloudinary.js';
 
 // Get details of all products /api/v1/products
 export const getProducts = catchAsyncErrors(async (req, res) => {
@@ -24,7 +25,20 @@ export const getProducts = catchAsyncErrors(async (req, res) => {
   });
 });
 
-// Add new products /api/v1/admin/products
+// Admin Get details of all products /api/v1/products
+export const getAdminProducts = catchAsyncErrors(async (req, res, next) => {
+  const products = await Product.find().exec();
+
+  if (products.length === 0) {
+    return next(new ErrorHandler('Couldn\'t find products.', 404));
+  }
+
+  return res.status(200).json({
+    products,
+  });
+});
+
+// Admin Add new products /api/v1/admin/products
 export const addProduct = catchAsyncErrors(async (req, res) => {
   req.body.user = req.user._id;
 
@@ -48,7 +62,7 @@ export const getProductDetails = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-// Update details of a single product /api/v1/products/:id
+// Admin Update details of a single product /api/v1/admin/products/:id
 export const updateProductDetails = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
@@ -61,7 +75,33 @@ export const updateProductDetails = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-// Delete a single product /api/v1/products/:id
+// Admin Upload product images /api/v1/admin/products/upload_images/:id
+export const uploadProductImages = catchAsyncErrors(async (req, res, next) => {
+  const { public_id: publicId, url } = await uploadFile(req.body.selectedImage, 'shopIT/products');
+
+  const product = await Product.findByIdAndUpdate(req.params.id, {
+    $push: { images: [{ public_id: publicId, url }] },
+  });
+
+  res.status(200).json({
+    product,
+  });
+});
+
+// Admin Delete uploaded product images /api/v1/admin/product/delete_image/
+export const deleteProductImage = catchAsyncErrors(async (req, res) => {
+  await deleteFile(req.body.publicId);
+
+  const product = await Product.findByIdAndUpdate(req.body.productId, {
+    $pull: { images: { public_id: req.body.publicId } },
+  });
+
+  res.status(200).json({
+    product,
+  });
+});
+
+// Admin Delete a single product /api/v1/admin/products/:id
 export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id).exec();
 
@@ -76,7 +116,7 @@ export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-// Can the user review the product api/v1/can_review
+// Can the user review the product /api/v1/can_review
 export const canReview = catchAsyncErrors(async (req, res, next) => {
   const orders = await Order.find({ user: req.user._id, 'orderItems.productId': req.query.productId }).exec();
 
@@ -142,15 +182,17 @@ export const getReviews = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-// ADMIN Delete a review of a product api/v1/admin/reviews
+// ADMIN Delete a review of a product api/v1/admin/review
 export const deleteReview = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findById(req.query.productId).exec();
+  const product = await Product.findById(req.body.productId).exec();
 
   if (!product) {
     return next(new ErrorHandler('Couldn\'t find the product.', 404));
   }
 
-  product.reviews = product.reviews.filter((review) => review._id.toString() !== req.query.id.toString());
+  product.reviews = product.reviews.filter(
+    (review) => review._id.toString() !== req.body.reviewId.toString(),
+  );
 
   product.numOfReviews = product.reviews.length;
   product.ratings = product.numOfReviews && product.reviews.reduce((accumulator, review) => review.rating + accumulator, 0) / product.numOfReviews;
@@ -158,6 +200,6 @@ export const deleteReview = catchAsyncErrors(async (req, res, next) => {
   await product.save({ validateBeforeSave: false });
 
   res.status(200).json({
-    success: true,
+    response: 'Review deleted',
   });
 });

@@ -1,19 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
-import PropTypes from 'prop-types';
 
 export default function ProductItem({
   product: {
-    _id: id, name, price, ratings, images, numOfReviews,
-  }, columnSize,
+    _id: id,
+    name,
+    price,
+    ratings,
+    images,
+    numOfReviews,
+  },
+  columnSize,
 }) {
   return (
     <div className={`col-sm-12 col-md-6 col-lg-${columnSize} my-3`}>
       <div className="card p-3 rounded">
         <img
           className="card-img-top mx-auto"
-          src={images[0].url ? images[0].url : '../../../images/default_product.png'}
+          src={images.length > 0 ? images[0].url : '../../../images/default_product.png'}
           alt={name}
         />
         <div className="card-body ps-3 d-flex justify-content-center flex-column">
@@ -44,8 +49,3 @@ export default function ProductItem({
     </div>
   );
 }
-
-ProductItem.propTypes = {
-  product: PropTypes.object.isRequired,
-  columnSize: PropTypes.number.isRequired,
-};

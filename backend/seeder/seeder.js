@@ -1,22 +1,22 @@
-import dotenv from 'dotenv'
-import mongoose from 'mongoose'
-import Product from '../models/product.js'
-import products from './data.js'
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import Product from '../models/product.js';
+import products from './data.js';
 
-dotenv.config({ path: 'backend/config/config.env' })
+dotenv.config({ path: 'config/config.env' });
 
-async function seedProducts () {
+async function seedProducts() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI)
+    await mongoose.connect(process.env.MONGODB_URI);
 
-    await Product.insertMany(products)
-    console.log('Products are added successfully.')
+    await Product.insertMany(products);
+    console.log('Products are added successfully.');
 
-    process.exit()
+    process.exit();
   } catch (error) {
-    console.log(error.message)
-    process.exit()
+    console.log(error.message);
+    process.exit();
   }
 }
 
-seedProducts()
+seedProducts();

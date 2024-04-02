@@ -75,7 +75,7 @@ export default function MyOrders() {
                     />
                   </Link>
 
-                  <Link to={`/invoice/orders/${order._id}`}>
+                  <Link to={`/invoice/${order._id}`}>
                     <button
                       type="button"
                       aria-label="Print invoice"

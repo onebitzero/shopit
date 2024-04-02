@@ -14,18 +14,20 @@ export default function UploadAvatar() {
 
   const navigate = useNavigate();
 
-  const [uploadAvatar, { isLoading, isSuccess, error }] = useUploadAvatarMutation();
+  const [uploadAvatar, {
+    isLoading, isSuccess, isError, error,
+  }] = useUploadAvatarMutation();
 
   useEffect(() => {
-    if (error) {
-      toast.error(error.data.message);
-    }
-
     if (isSuccess) {
       toast.success('Successful');
       navigate('/me/profile');
     }
-  }, [error, isSuccess]);
+
+    if (isError) {
+      toast.error(error.data.message);
+    }
+  }, [isSuccess, isError, error]);
 
   function handleImageUpload(event) {
     const reader = new FileReader();
