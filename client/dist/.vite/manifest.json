@@ -1,0 +1,27 @@
+{
+  "node_modules/.pnpm/canvg@3.0.10/node_modules/canvg/lib/index.es.js": {
+    "file": "assets/index.es-CUtmuCuA.js",
+    "src": "node_modules/.pnpm/canvg@3.0.10/node_modules/canvg/lib/index.es.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.jsx"
+    ]
+  },
+  "node_modules/.pnpm/dompurify@2.4.9/node_modules/dompurify/dist/purify.es.js": {
+    "file": "assets/purify.es-CwLlgRcy.js",
+    "src": "node_modules/.pnpm/dompurify@2.4.9/node_modules/dompurify/dist/purify.es.js",
+    "isDynamicEntry": true
+  },
+  "src/main.jsx": {
+    "file": "assets/main-C2ZmaU-z.js",
+    "src": "src/main.jsx",
+    "isEntry": true,
+    "dynamicImports": [
+      "node_modules/.pnpm/dompurify@2.4.9/node_modules/dompurify/dist/purify.es.js",
+      "node_modules/.pnpm/canvg@3.0.10/node_modules/canvg/lib/index.es.js"
+    ],
+    "css": [
+      "assets/main-Bhikag8i.css"
+    ]
+  }
+}
