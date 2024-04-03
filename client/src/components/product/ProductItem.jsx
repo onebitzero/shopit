@@ -18,7 +18,7 @@ export default function ProductItem({
       <div className="card p-3 rounded">
         <img
           className="card-img-top mx-auto"
-          src={images.length > 0 ? images[0].url : '../../../images/default_product.png'}
+          src={images.length > 0 ? images[0].url : 'images/default_product.png'}
           alt={name}
         />
         <div className="card-body ps-3 d-flex justify-content-center flex-column">

@@ -59,7 +59,7 @@ export default function Header() {
                   src={
                     user.avatar
                       ? user.avatar.url
-                      : '../../../images/default_avatar.jpg'
+                      : 'images/default_avatar.jpg'
                   }
                   alt="User Avatar"
                   className="rounded-circle"

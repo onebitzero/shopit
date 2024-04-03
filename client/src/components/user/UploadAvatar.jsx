@@ -9,7 +9,7 @@ export default function UploadAvatar() {
   const { user } = useSelector((state) => state.auth);
   const [avatar, setAvatar] = useState('');
   const [avatarPreview, setAvatarPreview] = useState(
-    user.avatar ? user.avatar.url : '../../images/default_avatar.jpg',
+    user.avatar ? user.avatar.url : 'images/default_avatar.jpg',
   );
 
   const navigate = useNavigate();

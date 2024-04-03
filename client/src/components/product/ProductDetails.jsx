@@ -56,7 +56,7 @@ export default function ProductDetails() {
       if (images.length) {
         setActiveImageUrl(images[0].url);
       } else {
-        setActiveImageUrl('../../../images/default_product.png');
+        setActiveImageUrl('images/default_product.png');
       }
     }
   }, [isError, error, images]);
@@ -80,7 +80,7 @@ export default function ProductDetails() {
       productId,
       name,
       price,
-      image: images.length ? images[0].url : '../../../images/default_product.png',
+      image: images.length ? images[0].url : 'images/default_product.png',
       stock,
       quantity,
     };

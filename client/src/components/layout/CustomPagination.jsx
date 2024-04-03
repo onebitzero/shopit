@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Pagination from 'react-js-pagination';
-import PropTypes from 'prop-types';
 
 export default function CustomPagination({ resultsPerPage, productsCount }) {
   const [currentPage, setCurrentPage] = useState();
@@ -47,8 +46,3 @@ export default function CustomPagination({ resultsPerPage, productsCount }) {
     </div>
   );
 }
-
-CustomPagination.propTypes = {
-  resultsPerPage: PropTypes.number.isRequired,
-  productsCount: PropTypes.number.isRequired,
-};

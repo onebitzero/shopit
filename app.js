@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 import connectToDatabase from './config/connectToDatabase.js';
 
@@ -17,9 +19,12 @@ process.on('uncaughtException', (err, origin) => {
   process.exit(1);
 });
 
-dotenv.config({ path: 'config/config.env' });
+if (process.env.NODE_ENV !== 'PRODUCTION') {
+  dotenv.config({ path: 'config/config.env' });
+}
 
 const app = express();
+
 app.use(express.json(
   {
     limit: '10mb',
@@ -28,6 +33,7 @@ app.use(express.json(
     },
   },
 ));
+
 app.use(cookieParser());
 
 connectToDatabase();
@@ -38,6 +44,17 @@ app.use('/api/v1', orderRouter);
 app.use('/api/v1', paymentRouter);
 
 app.use(errorMiddleware);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+if (process.env.NODE_ENV === 'PRODUCTION') {
+  app.use(express.static(path.join(__dirname, 'client/dist/')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/dist/index.html'))
+  })
+}
 
 const server = app.listen(process.env.PORT, () => {
   console.log(`shopit listening on port ${process.env.PORT} in ${process.env.NODE_ENV} mode.`);
